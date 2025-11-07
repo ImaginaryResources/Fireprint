@@ -1,14 +1,29 @@
 # Fireprint 🔥🖨️
 
-A thermal printer companion for [Firebot](https://github.com/crowbartools/Firebot), an open source Twitch bot.  
+A thermal printer companion for [Firebot](https://github.com/crowbartools/Firebot), an open source Twitch bot, 
+to print Twitch events on receipt paper.
 For the best compatability make sure the printer in use is listed [here](https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html).
 
-> [!NOTE]  
+Supported events out of the box:
+
+- Follow
+- Sub
+- Sub Gifted
+- Community Subs Gifted
+- Gift Sub Upgraded
+- Prime Sub Upgraded
+- Cheer/Bits
+- Follower Goal
+- Sub Goal
+
+> [!TIP]  
 > Before trying this project make sure you can print a test page to your thermal printer and the appropriate drivers are installed.
+
+To start download the `fireprint.firebotsetup` and executable from the [releases page](https://github.com/ImaginaryResources/Fireprint/releases).
 
 ## Running a command in CLI
 
-It is important to first test `fireprint.exe` to ensure it works as expected.
+It is important to first test `fireprint.exe` or `fireprint` binary to ensure it works as expected.
 
 ```
 usage: fireprint.py [-h] [--eventMsg EVENTMSG] [--subMonths SUBMONTHS] [--subCurrentStreak SUBCURRENTSTREAK] [--subMsg SUBMSG]
@@ -49,8 +64,7 @@ options:
     --eventMsg "Thanks for the tier 1 sub!"
 ```
 
-The output should look like the following, and may not reflect the result when printed from Firebot.  
-This is because newlines are sent from Firebot, but is not possible through CLI.
+The output should look like the following, and may not reflect the result when printed from Firebot.
 
 <img src="https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/CLI_test.png" alt="Alt Text" width="300">
 
