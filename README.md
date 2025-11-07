@@ -1,4 +1,4 @@
-# Fireprint
+# Fireprint 🔥🖨️
 
 A thermal printer companion for [Firebot](https://github.com/crowbartools/Firebot), an open source Twitch bot.  
 For the best compatability make sure the printer in use is listed [here](https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html).
@@ -34,7 +34,7 @@ options:
 > [!NOTE]  
 > New lines via CLI will not appear, they do appear when sent from Firebot.
 
-Example
+### Example command
 
 ```
 .\fireprint.exe "Fireprint" `
@@ -49,7 +49,7 @@ Example
 The output should look like the following, and may not reflect the result when printed from Firebot.  
 This is because newlines are sent from Firebot, but is not possible through CLI.
 
-<img src="![image-url](https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/CLI_test.png)" alt="Alt Text" width="300" height="200">
+<img src="https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/CLI_test.png" alt="Alt Text" width="300">
 
 Once its confirmed to be working continue to the steps below.
 
@@ -69,9 +69,9 @@ Default: `blank`
 
 ### Result
 
-After importing test the Firebot sub event. It should look like the following.
+After importing test the "Fireprint Sub" event. It should look like the following.
 
-<img src="https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/CLI_test.png" alt="Alt Text" width="300" height="200">
+<img src="https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/Firebot_test.png" alt="Alt Text" width="300">
 
 ### Default messages for events
 
