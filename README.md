@@ -3,6 +3,9 @@
 A thermal printer companion for [Firebot](https://github.com/crowbartools/Firebot), an open source Twitch bot.  
 For the best compatability make sure the printer in use is listed [here](https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html).
 
+> [!NOTE]  
+> Before trying this project make sure you can print a test page to your thermal printer and the appropriate drivers are installed.
+
 ## Running a command in CLI
 
 It is important to first test `fireprint.exe` to ensure it works as expected.
