@@ -1,5 +1,6 @@
 python-escpos
 requests
-win32printing
+win32printing; platform_system == "Windows"
+pycups; platform_system == "Linux"
 arrow
 pyinstaller
