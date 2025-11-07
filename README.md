@@ -19,7 +19,7 @@ Supported events out of the box:
 > [!TIP]  
 > Before trying this project make sure you can print a test page to your thermal printer and the appropriate drivers are installed.
 
-To start download the `fireprint.firebotsetup` and executable from the [releases page](https://github.com/ImaginaryResources/Fireprint/releases).
+To start download the `Fireprint.firebotsetup` and executable from the [releases page](https://github.com/ImaginaryResources/Fireprint/releases).
 
 ## Running a command in CLI
 
@@ -70,9 +70,9 @@ The output should look like the following, and may not reflect the result when p
 
 Once its confirmed to be working continue to the steps below.
 
-## In Firebot
+## Firebot
 
-Download the setupfile and import it to Firebot.
+[Download](https://github.com/ImaginaryResources/Fireprint/releases) the setupfile and import it to Firebot, (Settings -> Setups -> Import Setup).
 
 ### Import Questions
 
