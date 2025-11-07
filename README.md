@@ -86,7 +86,7 @@ Default: `blank`
 
 ### Result
 
-After importing test the "Fireprint Sub" event. It should look like the following.
+After importing, test the "Fireprint Sub" event. It should look like the following.
 
 <img src="https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/Firebot_test.png" alt="Alt Text" width="300">
 
