@@ -1,0 +1,5 @@
+python-escpos
+requests
+win32printing
+arrow
+pyinstaller
