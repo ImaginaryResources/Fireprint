@@ -53,7 +53,7 @@ pyinstaller.exe .\fireprint.spec
 ### Test the exe
 
 ```
-.\fireprint.exe "Fireprint" `
+.\dist\fireprint.exe "Fireprint" `
     https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png `
     "Castle_" `
     --subMessage "You da besh" `

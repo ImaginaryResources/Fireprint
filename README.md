@@ -78,13 +78,13 @@ After importing test the "Fireprint Sub" event. It should look like the followin
 Follow
 
 ```
-$%fireprinterName $userAvatarUrl[$username] $username --eventMsg "Thank you for\n the follow!"
+$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the follow!"
 ```
 
 Sub
 
 ```
-$%fireprinterName $userAvatarUrl[$username] $username --eventMsg "Thank you for\n the $subType sub!" --subMonths $subMonths --subCurrentStreak $subCurrentStreak --subMessage "$subMessage"
+$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the $subType sub!" --subMonths $subMonths --subCurrentStreak $subCurrentStreak --subMessage "$subMessage"
 ```
 
 Sub Gifted
@@ -102,29 +102,29 @@ $%fireprinterName $userAvatarUrl[$giftGiverUsername] $giftGiverUsername --eventM
 Gift Sub Upgraded
 
 ```
-$%fireprinterName $userAvatarUrl[$username] $username --eventMsg "Thank you for\n the upgraded\n gifted sub!"
+$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the upgraded\n gifted sub!"
 ```
 
 Prime Sub Upgraded
 
 ```
-$%fireprinterName $userAvatarUrl[$username] $username --eventMsg "Thank you for\n the upgraded\n prime sub!"
+$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the upgraded\n prime sub!"
 ```
 
 Cheer/Bits
 
 ```
-$%fireprinterName $userAvatarUrl[$username] $username --eventMsg "Thank you for\n the $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
 ```
 
 Follower Goal
 
 ```
-$%fireprinterName $userAvatarUrl[$streamer] $streamer --eventMsg "Follower goal of\n $channelGoalTargetAmount[follow]\n is completed!"
+$%fireprinterName $userAvatarUrl[$userDisplayName[$streamer]] $userDisplayName[$streamer] --eventMsg "Follower goal of\n $channelGoalTargetAmount[follow]\n is completed!"
 ```
 
 Sub Goal
 
 ```
-$%fireprinterName $userAvatarUrl[$streamer] $streamer --eventMsg "Sub goal of\n $channelGoalTargetAmount[sub]\n is completed!"
+$%fireprinterName $userAvatarUrl[$userDisplayName[$streamer]] $userDisplayName[$streamer] --eventMsg "Sub goal of\n $channelGoalTargetAmount[sub]\n is completed!"
 ```
