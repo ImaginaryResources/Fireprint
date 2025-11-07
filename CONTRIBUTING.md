@@ -30,6 +30,20 @@ pip install -r requirements.txt
 
 ## Creating the fireprint.exe
 
+Run pyinstaller to initalize the exe
+
+```
+pyinstaller.exe --onefile .\fireprint.py
+```
+
+Add the following to `fireprint.spec `
+
+```
+...
+datas=[('env-fireprint\\Lib\\site-packages\\escpos\\capabilities.json', 'escpos')],
+...
+```
+
 Run pyinstaller with the spec file
 
 ```
