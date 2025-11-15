@@ -49,8 +49,17 @@ def print_receipt(printer, url, username, eventMsg="", printImage=True, subMonth
     p.open()
 
     p.set(align='center', bold=True, double_height=True, double_width=True, smooth=True)
-    p.text(eventMsg)
-    p.ln(2)
+    
+    if eventMsg:
+        p.set(align='center', bold=True, width=2, height=2, custom_size=True)
+        p.text(eventMsg)
+        p.ln(2)
+
+    if len(username) > 16:
+        p.set(align='center', bold=True, width=1, height=1, custom_size=True)
+    else:
+        p.set(align='center', bold=True, width=2, height=2, custom_size=True)
+
     p.text(f"@{username}")
     p.ln(2)
 
