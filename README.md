@@ -12,9 +12,10 @@ Supported events out of the box:
 - Community Subs Gifted
 - Gift Sub Upgraded
 - Prime Sub Upgraded
-- Cheer/Bits
+- Cheer/Bits: Default is set to 25+ bits
 - Follower Goal
 - Sub Goal
+- Raids: Default is set to 10+ viewers
 
 > [!TIP]  
 > Before trying this project make sure you can print a test page to your thermal printer and the appropriate drivers are installed.
@@ -144,4 +145,10 @@ Sub Goal
 
 ```
 $%fireprinterName $userAvatarUrl[$userDisplayName[$streamer]] $userDisplayName[$streamer] --eventMsg "Sub goal of\n $channelGoalTargetAmount[sub]\n is completed!"
+```
+
+Incoming Raid
+
+```
+$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the $raidViewerCount\n viewer raid!"
 ```
