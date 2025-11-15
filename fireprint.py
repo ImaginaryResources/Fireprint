@@ -38,12 +38,7 @@ def download_png(url, username):
         print(f"Error occurred while downloading the file: {e}")
         return None
 
-def print_receipt(printer, url, username, eventMsg="", subMonths=0, subCurrentStreak=0, subMessage="", cheerMessage="", cheerTotalBits=0):
-    png_path = download_png(url, username)
-    if not png_path:
-        print(f"Error: Could not download the image for username '{username}'.")
-        return  # Exit if the download failed
-
+def print_receipt(printer, url, username, eventMsg="", printImage=True, subMonths=0, subCurrentStreak=0, subMessage="", cheerMessage="", cheerTotalBits=0):
     # Configure thermal printer here https://python-escpos.readthedocs.io/en/latest/user/usage.html
     if platform.system() == "Windows":
         p = Win32Raw(printer)
@@ -51,23 +46,31 @@ def print_receipt(printer, url, username, eventMsg="", subMonths=0, subCurrentSt
         p = CupsPrinter(printer)
     else:
         raise OSError("Unsupported operating system")
-
     p.open()
+
     p.set(align='center', bold=True, double_height=True, double_width=True, smooth=True)
     p.text(eventMsg)
     p.ln(2)
-    p.text(f"@{username}\n\n")
-
-    try:
-        p.image(png_path)
-    except Exception as e:
-        print(f"Error loading image: {e}")
-        p.text("Error loading image.\n")
-    finally:
-        if os.path.isfile(png_path):
-            os.remove(png_path)  # Clean up after printing
-
+    p.text(f"@{username}")
     p.ln(2)
+
+    if url:
+        png_path = download_png(url, username)
+        if not png_path:
+            print(f"Error: Could not download the image for username '{username}'.")
+            return  # Exit if the download failed
+
+        try:
+            p.image(png_path)
+        except Exception as e:
+            print(f"Error loading image: {e}")
+            p.text("Error loading image.\n")
+        finally:
+            if os.path.isfile(png_path):
+                os.remove(png_path)  # Clean up after printing
+        p.ln(2)
+
+    p.set(align='center', bold=True, width=2, height=2, custom_size=True)
 
     if cheerTotalBits:
         p.text(f"{cheerTotalBits}\n Total cheered!")
@@ -95,7 +98,7 @@ def print_receipt(printer, url, username, eventMsg="", subMonths=0, subCurrentSt
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A thermal printer companion for Firebot")
     parser.add_argument("printer", help="name of the printer")
-    parser.add_argument("url", help="URL of the user image")
+    parser.add_argument("url", nargs="?", default=None, help="URL of the user image (optional)")
     parser.add_argument("username", help="username for the receipt")
     parser.add_argument("--eventMsg", default="", help="message to display")
     parser.add_argument("--subMonths", type=int, default=0, help="number of months subbed")
