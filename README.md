@@ -27,15 +27,14 @@ To start download the `Fireprint.firebotsetup` and executable from the [releases
 It is important to first test `fireprint.exe` or `fireprint` binary to ensure it works as expected.
 
 ```
-usage: fireprint.py [-h] [--eventMsg EVENTMSG] [--subMonths SUBMONTHS] [--subCurrentStreak SUBCURRENTSTREAK] [--subMsg SUBMSG]
-                    [--cheerTotalBits CHEERTOTALBITS]
-                    printer url username
+usage: fireprint.py [-h] [--eventMsg EVENTMSG] [--subMonths SUBMONTHS] [--subCurrentStreak SUBCURRENTSTREAK] [--subMessage SUBMESSAGE] [--cheerMessage CHEERMESSAGE] [--cheerTotalBits CHEERTOTALBITS]
+                    printer [url] username
 
 A thermal printer companion for Firebot
 
 positional arguments:
   printer               name of the printer
-  url                   URL of the user image
+  url                   URL of the user image (optional)
   username              username for the receipt
 
 options:
@@ -45,7 +44,10 @@ options:
                         number of months subbed
   --subCurrentStreak SUBCURRENTSTREAK
                         current sub streak in months
-  --subMsg SUBMSG       sub message
+  --subMessage SUBMESSAGE
+                        sub message
+  --cheerMessage CHEERMESSAGE
+                        message from cheer
   --cheerTotalBits CHEERTOTALBITS
                         number of bits cheered
 ```
