@@ -82,6 +82,7 @@ def print_receipt(printer, imageSource, username, eventMsg="", printImage=True, 
 
     if not png_path or not os.path.isfile(png_path):
         print(f"Error: Could not get the image for username '{username}'.")
+        p.cut()
         return  # Exit if the download failed
 
     try:
