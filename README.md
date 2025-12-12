@@ -13,6 +13,9 @@ Supported events out of the box:
 - Gift Sub Upgraded
 - Prime Sub Upgraded
 - Cheer/Bits: Default is set to 25+ bits
+  - Gigantify Emote
+  - Message Effect
+  - On-Screen Celebration
 - Follower Goal
 - Sub Goal
 - Raids: Default is set to 10+ viewers
@@ -116,7 +119,7 @@ $%fireprinterName $userAvatarUrl[$giftGiverUsername] $giftGiverUsername --eventM
 Community Subs Gifted
 
 ```
-$%fireprinterName $userAvatarUrl[$giftGiverUsername] $giftGiverUsername --eventMsg "Thank you for\n the gifts to\n the community!"
+$%fireprinterName $userAvatarUrl[$giftGiverUsername] $giftGiverUsername --eventMsg "Thank you for\n $giftCount gifts to\n the community!"
 ```
 
 Gift Sub Upgraded
@@ -135,6 +138,30 @@ Cheer/Bits
 
 ```
 $%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+```
+
+Gigantify Emote (Cheer/Bits)
+
+```
+$%fireprinterName $gigantifiedEmoteUrl $userDisplayName --eventMsg "Giant emote\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+```
+
+Message Effect (Cheer/Bits)
+
+```
+$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Msg effect\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+```
+
+On-Screen Celebration (Cheer/Bits)
+
+```
+$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Emote party\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits
+```
+
+Tips/Donations
+
+```
+$%fireprinterName $userAvatarUrl[$donationFrom] $donationFrom --eventMsg "Thank you for\n the $donationAmountFormatted dono!" --cheerMessage "$donationMessage"
 ```
 
 Follower Goal
