@@ -4,6 +4,7 @@ import platform
 import requests
 import argparse
 import arrow
+import shutil
 import sys
 import os
 
@@ -25,20 +26,36 @@ def format_years_months(total_months):
         output.append(f"{months} Month{'s' if months > 1 else ''}")
     return " ".join(output)
     
-def download_png(url, username):
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-        png_path = f"{username.lower()}.png"
-        with open(png_path, 'wb') as f:
-            f.write(response.content)
-        print(f"File downloaded successfully to {png_path}")
-        return png_path
-    except requests.exceptions.RequestException as e:
-        print(f"Error occurred while downloading the file: {e}")
-        return None
+def download_png(source, imageName):
+    png_path = f"{imageName.lower()}.png"
 
-def print_receipt(printer, url, username, eventMsg="", printImage=True, subMonths=0, subCurrentStreak=0, subMessage="", cheerMessage="", cheerTotalBits=0):
+    if source.startswith("http://") or source.startswith("https://"):
+        try:
+            response = requests.get(source)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            with open(png_path, 'wb') as f:
+                f.write(response.content)
+            print(f"File downloaded successfully from URL to {png_path}")
+            return png_path
+        except requests.exceptions.RequestException as e:
+            print(f"Error occurred while downloading from URL: {e}")
+            return None
+    
+    else:
+        try:
+            if not os.path.isfile(source):
+                print(f"Local file {source} not found.")
+                return None
+
+            shutil.copy(source, png_path)
+            print(f"Copied local PNG to {png_path}")
+            return png_path
+
+        except (OSError, shutil.Error) as e:
+            print(f"Error copying local file: {e}")
+            return None
+
+def print_receipt(printer, imageSource, username, eventMsg="", printImage=True, subMonths=0, subCurrentStreak=0, subMessage="", cheerMessage="", cheerTotalBits=0):
     # Configure thermal printer here https://python-escpos.readthedocs.io/en/latest/user/usage.html
     if platform.system() == "Windows":
         p = Win32Raw(printer)
@@ -48,13 +65,6 @@ def print_receipt(printer, url, username, eventMsg="", printImage=True, subMonth
         raise OSError("Unsupported operating system")
     p.open()
 
-    p.set(align='center', bold=True, double_height=True, double_width=True, smooth=True)
-    
-    if eventMsg:
-        p.set(align='center', bold=True, width=2, height=2, custom_size=True)
-        p.text(eventMsg)
-        p.ln(2)
-
     if len(username) > 16:
         p.set(align='center', bold=True, width=1, height=1, custom_size=True)
     else:
@@ -62,22 +72,27 @@ def print_receipt(printer, url, username, eventMsg="", printImage=True, subMonth
 
     p.text(f"@{username}")
     p.ln(2)
-
-    if url:
-        png_path = download_png(url, username)
-        if not png_path:
-            print(f"Error: Could not download the image for username '{username}'.")
-            return  # Exit if the download failed
-
-        try:
-            p.image(png_path)
-        except Exception as e:
-            print(f"Error loading image: {e}")
-            p.text("Error loading image.\n")
-        finally:
-            if os.path.isfile(png_path):
-                os.remove(png_path)  # Clean up after printing
+    
+    if eventMsg:
+        p.set(align='center', bold=True, width=2, height=2, custom_size=True)
+        p.text(eventMsg)
         p.ln(2)
+
+    png_path = download_png(imageSource, username)
+
+    if not png_path or not os.path.isfile(png_path):
+        print(f"Error: Could not get the image for username '{username}'.")
+        return  # Exit if the download failed
+
+    try:
+        p.image(png_path)
+        p.ln(2)
+    except Exception as e:
+        print(f"Error loading image: {e}")
+        p.text("Error loading image.\n")
+    finally:
+        if os.path.isfile(png_path):
+            os.remove(png_path)  # Clean up after printing
 
     p.set(align='center', bold=True, width=2, height=2, custom_size=True)
 
@@ -107,7 +122,7 @@ def print_receipt(printer, url, username, eventMsg="", printImage=True, subMonth
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A thermal printer companion for Firebot")
     parser.add_argument("printer", help="name of the printer")
-    parser.add_argument("url", nargs="?", default=None, help="URL of the user image (optional)")
+    parser.add_argument("imageSource", nargs="?", default=None, help="full path to png image or URL of the user image (optional)")
     parser.add_argument("username", help="username for the receipt")
     parser.add_argument("--eventMsg", default="", help="message to display")
     parser.add_argument("--subMonths", type=int, default=0, help="number of months subbed")
@@ -120,7 +135,7 @@ if __name__ == "__main__":
 
     print_receipt(
         printer=args.printer,
-        url=args.url,
+        imageSource=args.imageSource,
         username=args.username,
         eventMsg=args.eventMsg,
         subMonths=args.subMonths,
