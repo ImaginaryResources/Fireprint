@@ -122,15 +122,15 @@ def print_receipt(printer, imageSource, username, eventMsg="", printImage=True, 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A thermal printer companion for Firebot")
-    parser.add_argument("printer", help="name of the printer")
-    parser.add_argument("imageSource", nargs="?", default=None, help="full path to png image or URL of the user image (optional)")
-    parser.add_argument("username", help="username for the receipt")
-    parser.add_argument("--eventMsg", default="", help="message to display")
-    parser.add_argument("--subMonths", type=int, default=0, help="number of months subbed")
-    parser.add_argument("--subCurrentStreak", type=int, default=0, help="current sub streak in months")
-    parser.add_argument("--subMessage", default="", help="sub message")
-    parser.add_argument("--cheerMessage", default="", help="message from cheer")
-    parser.add_argument("--cheerTotalBits", default="", help="number of bits cheered")
+    parser.add_argument("-p", "--printer", required=True, help="name of the printer")
+    parser.add_argument("-i", "--imageSource", required=True, nargs="?", default=None, help="full path to png image or URL of the user image (optional)")
+    parser.add_argument("-u", "--username", required=True, help="username for the receipt")
+    parser.add_argument("-e", "--eventMsg", default="", help="message to display")
+    parser.add_argument("-M", "--subMonths", type=int, default=0, help="number of months subbed")
+    parser.add_argument("-S", "--subCurrentStreak", type=int, default=0, help="current sub streak in months")
+    parser.add_argument("-m", "--subMessage", default="", help="sub message")
+    parser.add_argument("-c", "--cheerMessage", default="", help="message from cheer")
+    parser.add_argument("-t", "--cheerTotalBits", default="", help="number of bits cheered")
 
     args = parser.parse_args()
 

@@ -30,28 +30,29 @@ To start download the `Fireprint.firebotsetup` and executable from the [releases
 It is important to first test `fireprint.exe` or `fireprint` binary to ensure it works as expected.
 
 ```
-usage: fireprint.py [-h] [--eventMsg EVENTMSG] [--subMonths SUBMONTHS] [--subCurrentStreak SUBCURRENTSTREAK] [--subMessage SUBMESSAGE] [--cheerMessage CHEERMESSAGE] [--cheerTotalBits CHEERTOTALBITS]
-                    printer [url] username
+usage: fireprint.exe [-h] -p PRINTER -i [IMAGESOURCE] -u USERNAME [-e EVENTMSG] [-M SUBMONTHS] [-S SUBCURRENTSTREAK] [-m SUBMESSAGE] [-c CHEERMESSAGE] [-t CHEERTOTALBITS]
 
 A thermal printer companion for Firebot
 
-positional arguments:
-  printer               name of the printer
-  url                   URL of the user image (optional)
-  username              username for the receipt
-
 options:
   -h, --help            show this help message and exit
-  --eventMsg EVENTMSG   message to display
-  --subMonths SUBMONTHS
+  -p, --printer PRINTER
+                        name of the printer
+  -i, --imageSource [IMAGESOURCE]
+                        full path to png image or URL of the user image (optional)
+  -u, --username USERNAME
+                        username for the receipt
+  -e, --eventMsg EVENTMSG
+                        message to display
+  -M, --subMonths SUBMONTHS
                         number of months subbed
-  --subCurrentStreak SUBCURRENTSTREAK
+  -S, --subCurrentStreak SUBCURRENTSTREAK
                         current sub streak in months
-  --subMessage SUBMESSAGE
+  -m, --subMessage SUBMESSAGE
                         sub message
-  --cheerMessage CHEERMESSAGE
+  -c, --cheerMessage CHEERMESSAGE
                         message from cheer
-  --cheerTotalBits CHEERTOTALBITS
+  -t, --cheerTotalBits CHEERTOTALBITS
                         number of bits cheered
 ```
 
@@ -101,83 +102,83 @@ After importing, test the "Fireprint Sub" event. It should look like the followi
 Follow
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the follow!"
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the follow!"
 ```
 
 Sub
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the $subType sub!" --subMonths $subMonths --subCurrentStreak $subCurrentStreak --subMessage "$subMessage"
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $subType sub!" --subMonths $subMonths --subCurrentStreak $subCurrentStreak --subMessage "$subMessage"
 ```
 
 Sub Gifted
 
 ```
-$%fireprinterName $userAvatarUrl[$giftGiverUsername] $giftGiverUsername --eventMsg "Thank you for\n the gift to\n $giftReceiverUsername!"
+-p $%fireprinterName -i $userAvatarUrl[$giftGiverUsername] -u $giftGiverUsername --eventMsg "Thank you for\n the gift to\n $giftReceiverUsername!"
 ```
 
 Community Subs Gifted
 
 ```
-$%fireprinterName $userAvatarUrl[$giftGiverUsername] $giftGiverUsername --eventMsg "Thank you for\n $giftCount gifts to\n the community!"
+-p $%fireprinterName -i $userAvatarUrl[$giftGiverUsername] -u $giftGiverUsername --eventMsg "Thank you for\n $giftCount gifts to\n the community!"
 ```
 
 Gift Sub Upgraded
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the upgraded\n gifted sub!"
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the upgraded\n gifted sub!"
 ```
 
 Prime Sub Upgraded
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the upgraded\n prime sub!"
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the upgraded\n prime sub!"
 ```
 
 Cheer/Bits
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
 ```
 
 Gigantify Emote (Cheer/Bits)
 
 ```
-$%fireprinterName $gigantifiedEmoteUrl $userDisplayName --eventMsg "Giant emote\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+-p $%fireprinterName -i $gigantifiedEmoteUrl -u $userDisplayName --eventMsg "Giant emote\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
 ```
 
 Message Effect (Cheer/Bits)
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Msg effect\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Msg effect\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
 ```
 
 On-Screen Celebration (Cheer/Bits)
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Emote party\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Emote party\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits
 ```
 
 Tips/Donations
 
 ```
-$%fireprinterName $userAvatarUrl[$donationFrom] $donationFrom --eventMsg "Thank you for\n the $donationAmountFormatted dono!" --cheerMessage "$donationMessage"
+-p $%fireprinterName -i $userAvatarUrl[$donationFrom] -u $donationFrom --eventMsg "Thank you for\n the $donationAmountFormatted dono!" --cheerMessage "$donationMessage"
 ```
 
 Follower Goal
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName[$streamer]] $userDisplayName[$streamer] --eventMsg "Follower goal of\n $channelGoalTargetAmount[follow]\n is completed!"
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName[$streamer]] -u $userDisplayName[$streamer] --eventMsg "Follower goal of\n $channelGoalTargetAmount[follow]\n is completed!"
 ```
 
 Sub Goal
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName[$streamer]] $userDisplayName[$streamer] --eventMsg "Sub goal of\n $channelGoalTargetAmount[sub]\n is completed!"
+-p $%fireprinterName -i $userAvatarUrl[$userDisplayName[$streamer]] -u $userDisplayName[$streamer] --eventMsg "Sub goal of\n $channelGoalTargetAmount[sub]\n is completed!"
 ```
 
 Incoming Raid
 
 ```
-$%fireprinterName $userAvatarUrl[$userDisplayName] $userDisplayName --eventMsg "Thank you for\n the $raidViewerCount\n viewer raid!"
+-p $%fireprinterName -i -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $raidViewerCount\n viewer raid!"
 ```
