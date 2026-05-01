@@ -33,9 +33,9 @@ pip install -r requirements.txt
 ### Testing fireprint.py
 
 ```
-.\env-fireprint\Scripts\python.exe fireprint.py "Fireprint" `
-    https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png `
-    "Castle_" `
+.\env-fireprint\Scripts\python.exe fireprint.py --printer "Fireprint" `
+    --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png `
+    --username "Castle_" `
     --subMessage "You da besh" `
     --subMonths 13 `
     --subCurrentStreak 3 `
@@ -65,9 +65,9 @@ pyinstaller.exe .\fireprint.spec
 ### Test the exe
 
 ```
-.\dist\fireprint.exe "Fireprint" `
-    https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png `
-    "Castle_" `
+.\dist\fireprint.exe --printer "Fireprint" `
+    --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png `
+    --username "Castle_" `
     --subMessage "You da besh" `
     --subMonths 13 `
     --subCurrentStreak 3 `
@@ -79,7 +79,7 @@ pyinstaller.exe .\fireprint.spec
 Install packages
 
 ```
-sudo apt install libcups2-dev build-essential
+sudo apt install libcups2-dev build-essential python3-dev gcc
 ```
 
 Create a virtual python environment
@@ -103,9 +103,9 @@ pip install -r requirements.txt
 ### Testing fireprint.py
 
 ```
-python3 fireprint.py "Fireprint" \
-    https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png \
-    "Castle_" \
+python3 fireprint.py --printer "Fireprint" \
+    --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png \
+    --username "Castle_" \
     --subMessage "You da besh" \
     --subMonths 13 \
     --subCurrentStreak 3 \
@@ -135,9 +135,9 @@ pyinstaller fireprint.spec
 ### Testing the fireprint binary
 
 ```
-./dist/fireprint "Fireprint" \
-    https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png \
-    "Castle_" \
+./dist/fireprint --printer "Fireprint" \
+    --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png \
+    --username "Castle_" \
     --subMessage "You da besh" \
     --subMonths 13 \
     --subCurrentStreak 3 \
