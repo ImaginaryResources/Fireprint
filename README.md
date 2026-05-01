@@ -62,9 +62,9 @@ options:
 ### Example command
 
 ```
-.\fireprint.exe "Fireprint" `
-    https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png `
-    "Castle_" `
+.\fireprint.exe --printer "Fireprint" `
+    --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png `
+    --username "Castle_" `
     --subMessage "You da besh" `
     --subMonths 13 `
     --subCurrentStreak 3 `
