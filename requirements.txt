@@ -1,6 +1,5 @@
 python-escpos
+py-star-tsp
 requests
-win32printing; platform_system == "Windows"
-pycups; platform_system == "Linux"
 arrow
 pyinstaller

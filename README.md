@@ -1,8 +1,11 @@
 # Fireprint 🔥🖨️
 
+> [!IMPORTANT]
+> This branch only works with TSP printer which uses the [`py-star-tsp` Python SDK](https://github.com/printer-stream/py-star-tsp).
+> Uses a client-server architecture — `fireprint.py` sends ESC/POS data to a `print_server.py` which renders it on a Star TSP100 thermal printer over USB.
+
 A thermal printer companion for [Firebot](https://github.com/crowbartools/Firebot), an open source Twitch bot, 
 to print Twitch events on receipt paper.
-For the best compatability make sure the printer in use is listed [here](https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html).
 
 Supported events out of the box:
 
@@ -27,23 +30,30 @@ To start download the `Fireprint.firebotsetup` and executable from the [releases
 
 ## Running a command in CLI
 
-It is important to first test `fireprint.exe` or `fireprint` binary to ensure it works as expected.
+First start the print server in one terminal:
 
 ```
-usage: fireprint.exe [-h] -p PRINTER -i [IMAGESOURCE] -u USERNAME [-e EVENTMSG] [-M SUBMONTHS] [-S SUBCURRENTSTREAK] [-m SUBMESSAGE] [-c CHEERMESSAGE] [-t CHEERTOTALBITS]
+python print_server.py
+```
+
+Then in another terminal, send receipts with `fireprint.py`:
+
+```
+usage: fireprint.exe [-h] [-s SERVER] [-P PORT] -i [IMAGESOURCE] -u USERNAME [-e EVENTMSG] [-d] [-M SUBMONTHS] [-S SUBCURRENTSTREAK] [-m SUBMESSAGE] [-c CHEERMESSAGE] [-t CHEERTOTALBITS]
 
 A thermal printer companion for Firebot
 
 options:
   -h, --help            show this help message and exit
-  -p, --printer PRINTER
-                        name of the printer
+  -s, --server SERVER   print server host (default: 127.0.0.1)
+  -P, --port PORT       print server port (default: 9100)
   -i, --imageSource [IMAGESOURCE]
                         full path to png image or URL of the user image (optional)
   -u, --username USERNAME
                         username for the receipt
   -e, --eventMsg EVENTMSG
-                        message to display
+                        message to display (use \n for line breaks)
+  -d, --debug           save preview image instead of printing
   -M, --subMonths SUBMONTHS
                         number of months subbed
   -S, --subCurrentStreak SUBCURRENTSTREAK
@@ -57,18 +67,20 @@ options:
 ```
 
 > [!NOTE]  
-> New lines via CLI will not appear, they do appear when sent from Firebot.
+> Use `\n` in string arguments to add line breaks (e.g. `--eventMsg "Thank you\nfor the sub!"`).
+>
+> Use `-d` to render a `preview.bmp` without wasting paper or needing the print server.
 
 ### Example command
 
 ```
-.\fireprint.exe --printer "Fireprint" `
-    --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png `
-    --username "Castle_" `
-    --subMessage "You da besh" `
-    --subMonths 13 `
-    --subCurrentStreak 3 `
-    --eventMsg "Thanks for the tier 1 sub!"
+python fireprint.py --server 127.0.0.1 \
+    --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png \
+    --username "Castle_" \
+    --subMessage "You da besh" \
+    --subMonths 13 \
+    --subCurrentStreak 3 \
+    --eventMsg "Thanks for the\ntier 1 sub!"
 ```
 
 The output should look like the following, and may not reflect the result when printed from Firebot.
@@ -87,9 +99,12 @@ Once its confirmed to be working continue to the steps below.
 
 Default: `blank`
 
-#### Enter the name of the printer
+#### Enter the print server host (default: 127.0.0.1)
 
 Default: `blank`
+
+> [!IMPORTANT]  
+> Make sure `print_server.py` is running on the target machine before sending receipts.
 
 ### Result
 
@@ -102,83 +117,83 @@ After importing, test the "Fireprint Sub" event. It should look like the followi
 Follow
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the follow!"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the follow!"
 ```
 
 Sub
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $subType sub!" --subMonths $subMonths --subCurrentStreak $subCurrentStreak --subMessage "$subMessage"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $subType sub!" --subMonths $subMonths --subCurrentStreak $subCurrentStreak --subMessage "$subMessage"
 ```
 
 Sub Gifted
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$giftGiverUsername] -u $giftGiverUsername --eventMsg "Thank you for\n the gift to\n $giftReceiverUsername!"
+-s $%fireprinterServer -i $userAvatarUrl[$giftGiverUsername] -u $giftGiverUsername --eventMsg "Thank you for\n the gift to\n $giftReceiverUsername!"
 ```
 
 Community Subs Gifted
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$giftGiverUsername] -u $giftGiverUsername --eventMsg "Thank you for\n $giftCount gifts to\n the community!"
+-s $%fireprinterServer -i $userAvatarUrl[$giftGiverUsername] -u $giftGiverUsername --eventMsg "Thank you for\n $giftCount gifts to\n the community!"
 ```
 
 Gift Sub Upgraded
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the upgraded\n gifted sub!"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the upgraded\n gifted sub!"
 ```
 
 Prime Sub Upgraded
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the upgraded\n prime sub!"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the upgraded\n prime sub!"
 ```
 
 Cheer/Bits
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
 ```
 
 Gigantify Emote (Cheer/Bits)
 
 ```
--p $%fireprinterName -i $gigantifiedEmoteUrl -u $userDisplayName --eventMsg "Giant emote\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+-s $%fireprinterServer -i $gigantifiedEmoteUrl -u $userDisplayName --eventMsg "Giant emote\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
 ```
 
 Message Effect (Cheer/Bits)
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Msg effect\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Msg effect\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits --cheerMessage "$cheerMessage"
 ```
 
 On-Screen Celebration (Cheer/Bits)
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Emote party\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Emote party\n for $cheerBitsAmount bits!" --cheerTotalBits $cheerTotalBits
 ```
 
 Tips/Donations
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$donationFrom] -u $donationFrom --eventMsg "Thank you for\n the $donationAmountFormatted dono!" --cheerMessage "$donationMessage"
+-s $%fireprinterServer -i $userAvatarUrl[$donationFrom] -u $donationFrom --eventMsg "Thank you for\n the $donationAmountFormatted dono!" --cheerMessage "$donationMessage"
 ```
 
 Follower Goal
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName[$streamer]] -u $userDisplayName[$streamer] --eventMsg "Follower goal of\n $channelGoalTargetAmount[follow]\n is completed!"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName[$streamer]] -u $userDisplayName[$streamer] --eventMsg "Follower goal of\n $channelGoalTargetAmount[follow]\n is completed!"
 ```
 
 Sub Goal
 
 ```
--p $%fireprinterName -i $userAvatarUrl[$userDisplayName[$streamer]] -u $userDisplayName[$streamer] --eventMsg "Sub goal of\n $channelGoalTargetAmount[sub]\n is completed!"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName[$streamer]] -u $userDisplayName[$streamer] --eventMsg "Sub goal of\n $channelGoalTargetAmount[sub]\n is completed!"
 ```
 
 Incoming Raid
 
 ```
--p $%fireprinterName -i -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $raidViewerCount\n viewer raid!"
+-s $%fireprinterServer -i $userAvatarUrl[$userDisplayName] -u $userDisplayName --eventMsg "Thank you for\n the $raidViewerCount\n viewer raid!"
 ```

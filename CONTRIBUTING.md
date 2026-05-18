@@ -103,13 +103,13 @@ pip install -r requirements.txt
 ### Testing fireprint.py
 
 ```
-python3 fireprint.py --printer "Fireprint" \
+python fireprint.py --server 127.0.0.1 \
     --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png \
     --username "Castle_" \
     --subMessage "You da besh" \
     --subMonths 13 \
     --subCurrentStreak 3 \
-    --eventMsg "Thanks for the tier 1 sub!"
+    --eventMsg "Thanks for the\ntier 1 sub!"
 ```
 
 ### Creating the fireprint binary
@@ -117,31 +117,37 @@ python3 fireprint.py --printer "Fireprint" \
 Run pyinstaller to initalize the binary
 
 ```
-pyinstaller --onefile fireprint.py
+pyinstaller.exe --onefile .\<fireprint|print-server>.py
 ```
 
-Add the following to `fireprint.spec`. This may be different, so ensure `capabilities.json` exists here.
+1. Add the following to `fireprint.spec`
 
 ```
-datas=[('env-fireprint/lib/python3.10/site-packages/escpos/capabilities.json', 'escpos')],
+datas=[('env-fireprint/lib/python3.14/site-packages/escpos/capabilities.json', 'escpos')],
+```
+
+2. Add the following for `print-server.spec`
+
+```
+datas=[('env-fireprint/lib/python3.14/site-packages/py_star_tsp/fonts', 'py_star_tsp/fonts')],
 ```
 
 Run pyinstaller with the spec file
 
 ```
-pyinstaller fireprint.spec
+pyinstaller.exe .\<fireprint|print-server>.spec 
 ```
 
 ### Testing the fireprint binary
 
 ```
-./dist/fireprint --printer "Fireprint" \
+./dist/fireprint --server 127.0.0.1 \
     --image https://raw.githubusercontent.com/ImaginaryResources/Fireprint/main/media/castle_.png \
     --username "Castle_" \
     --subMessage "You da besh" \
     --subMonths 13 \
     --subCurrentStreak 3 \
-    --eventMsg "Thanks for the tier 1 sub!"
+    --eventMsg "Thanks for the\ntier 1 sub!"
 ```
 
 ## Notes

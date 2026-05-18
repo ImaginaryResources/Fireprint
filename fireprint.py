@@ -1,12 +1,14 @@
-from escpos.printer import CupsPrinter, Win32Raw
-from datetime import datetime
-import platform
+from escpos.printer import Network, Dummy
 import requests
 import argparse
 import arrow
 import shutil
-import sys
+import codecs
 import os
+
+from py_star_tsp.escpos import EscposEmulator, PRESET_EPSON_TM_T88
+from py_star_tsp import StarTSP
+
 
 def get_current_date():
     now = arrow.now()
@@ -32,7 +34,7 @@ def download_png(source, imageName):
     if source.startswith("http://") or source.startswith("https://"):
         try:
             response = requests.get(source)
-            response.raise_for_status()  # Raise an exception for HTTP errors
+            response.raise_for_status()
             with open(png_path, 'wb') as f:
                 f.write(response.content)
             print(f"File downloaded successfully from URL to {png_path}")
@@ -55,26 +57,17 @@ def download_png(source, imageName):
             print(f"Error copying local file: {e}")
             return None
 
-def print_receipt(printer, imageSource, username, eventMsg="", printImage=True, subMonths=0, subCurrentStreak=0, subMessage="", cheerMessage="", cheerTotalBits=0):
-    # Configure thermal printer here https://python-escpos.readthedocs.io/en/latest/user/usage.html
-    if platform.system() == "Windows":
-        p = Win32Raw(printer)
-    elif platform.system() == "Linux":  # requires pycups https://python-escpos.readthedocs.io/en/latest/user/printers.html#cups
-        p = CupsPrinter(printer)
-    else:
-        raise OSError("Unsupported operating system")
-    p.open()
-
+def build_receipt(p, imageSource, username, eventMsg="", subMonths=0, subCurrentStreak=0, subMessage="", cheerMessage="", cheerTotalBits=0):
     if len(username) > 16:
-        p.set(align='center', bold=True, width=1, height=1, custom_size=True)
+        p.set(align='center', bold=False, width=1, height=1, custom_size=True)
     else:
-        p.set(align='center', bold=True, width=2, height=2, custom_size=True)
+        p.set(align='center', bold=False, width=2, height=2, custom_size=True)
 
     p.text(f"@{username}")
     p.ln(2)
     
     if eventMsg:
-        p.set(align='center', bold=True, width=2, height=2, custom_size=True)
+        p.set(align='center', bold=False, width=2, height=2, custom_size=True)
         p.text(eventMsg)
         p.ln(2)
 
@@ -83,7 +76,7 @@ def print_receipt(printer, imageSource, username, eventMsg="", printImage=True, 
     if not png_path or not os.path.isfile(png_path):
         print(f"Error: Could not get the image for username '{username}'.")
         p.cut()
-        return  # Exit if the download failed
+        return png_path  # caller handles the partial output
 
     try:
         p.image(png_path)
@@ -93,9 +86,9 @@ def print_receipt(printer, imageSource, username, eventMsg="", printImage=True, 
         p.text("Error loading image.\n")
     finally:
         if os.path.isfile(png_path):
-            os.remove(png_path)  # Clean up after printing
+            os.remove(png_path)
 
-    p.set(align='center', bold=True, width=2, height=2, custom_size=True)
+    p.set(align='center', bold=False, width=2, height=2, custom_size=True)
 
     if cheerTotalBits:
         p.text(f"{cheerTotalBits}\n Total cheered!")
@@ -115,17 +108,45 @@ def print_receipt(printer, imageSource, username, eventMsg="", printImage=True, 
         p.text(subMessage)
         p.ln(2)
     
-    # Print current date and time to the end
-    p.set(align='center', bold=True, width=1, height=1, custom_size=True)
+    p.set(align='center', bold=False, width=1, height=1, custom_size=True)
     p.text(get_current_date())
-    p.cut()
+    p.cut(feed=False)
+
+
+def print_receipt(serverHost, imageSource, username, eventMsg="", subMonths=0, subCurrentStreak=0, subMessage="", cheerMessage="", cheerTotalBits=0, debug=False, port=9100):
+    d = Dummy()
+    d.set_with_default()
+    build_receipt(d, imageSource, username, eventMsg, subMonths, subCurrentStreak, subMessage, cheerMessage, cheerTotalBits)
+
+    if debug:
+        captured = []
+        emulator = EscposEmulator(
+            preset=PRESET_EPSON_TM_T88,
+            on_print=lambda rs: captured.append(rs),
+        )
+        emulator.feed(d.output)
+        raster_set = captured[0] if captured else emulator.flush()
+
+        p = StarTSP()
+        p.raster_width = PRESET_EPSON_TM_T88.print_width_dots
+        for block in raster_set.blocks:
+            p.add_raster(block)
+        p.save_rendered("preview.bmp")
+        print("Preview saved to preview.bmp")
+    else:
+        p = Network(serverHost, port=port)
+        p._raw(d.output)
+        p.close()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A thermal printer companion for Firebot")
-    parser.add_argument("-p", "--printer", required=True, help="name of the printer")
+    parser.add_argument("-s", "--server", default="127.0.0.1", help="print server host (default: 127.0.0.1)")
+    parser.add_argument("-P", "--port", type=int, default=9100, help="print server port (default: 9100)")
     parser.add_argument("-i", "--imageSource", required=True, nargs="?", default=None, help="full path to png image or URL of the user image (optional)")
     parser.add_argument("-u", "--username", required=True, help="username for the receipt")
     parser.add_argument("-e", "--eventMsg", default="", help="message to display")
+    parser.add_argument("-d", "--debug", action="store_true", help="save preview image instead of printing")
     parser.add_argument("-M", "--subMonths", type=int, default=0, help="number of months subbed")
     parser.add_argument("-S", "--subCurrentStreak", type=int, default=0, help="current sub streak in months")
     parser.add_argument("-m", "--subMessage", default="", help="sub message")
@@ -134,8 +155,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    for attr in ('eventMsg', 'subMessage', 'cheerMessage', 'username'):
+        val = getattr(args, attr, None)
+        if val:
+            setattr(args, attr, codecs.decode(val, 'unicode_escape'))
+
     print_receipt(
-        printer=args.printer,
+        serverHost=args.server,
         imageSource=args.imageSource,
         username=args.username,
         eventMsg=args.eventMsg,
@@ -143,5 +169,7 @@ if __name__ == "__main__":
         subCurrentStreak=args.subCurrentStreak,
         subMessage=args.subMessage,
         cheerMessage=args.cheerMessage,
-        cheerTotalBits=args.cheerTotalBits
+        cheerTotalBits=args.cheerTotalBits,
+        debug=args.debug,
+        port=args.port
     )
