@@ -3,6 +3,7 @@
 > [!IMPORTANT]
 > This branch only works with TSP printer which uses the [`py-star-tsp` Python SDK](https://github.com/printer-stream/py-star-tsp).
 > Uses a client-server architecture — `fireprint.py` sends ESC/POS data to a `print_server.py` which renders it on a Star TSP100 thermal printer over USB.
+> Follow the required steps before [proceeding](https://github.com/printer-stream/py-star-tsp#linux-usb-access-udev-rule).
 
 A thermal printer companion for [Firebot](https://github.com/crowbartools/Firebot), an open source Twitch bot, 
 to print Twitch events on receipt paper.
