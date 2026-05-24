@@ -79,8 +79,8 @@ pyinstaller.exe .\fireprint.spec
 Install packages
 
 ```
-sudo apt install libcups2-dev build-essential python3-dev gcc
-```
+sudo apt install libcups2-dev build-essential python3-dev gcc python3.14-venv
+``` 
 
 Create a virtual python environment
 
@@ -117,7 +117,7 @@ python fireprint.py --server 127.0.0.1 \
 Run pyinstaller to initalize the binary
 
 ```
-pyinstaller.exe --onefile .\<fireprint|print-server>.py
+pyinstaller --onefile ./<fireprint|print-server>.py
 ```
 
 1. Add the following to `fireprint.spec`
@@ -135,7 +135,7 @@ datas=[('env-fireprint/lib/python3.14/site-packages/py_star_tsp/fonts', 'py_star
 Run pyinstaller with the spec file
 
 ```
-pyinstaller.exe .\<fireprint|print-server>.spec 
+pyinstaller ./<fireprint|print-server>.spec 
 ```
 
 ### Testing the fireprint binary
